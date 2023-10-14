@@ -235,3 +235,52 @@ fs.writeFileSync('./database/user.json', JSON.stringify(_db, null, 3))
 
 switch (command) {
 //━━━━━━━━━━━━━━━[ MENU ]━━━━━━━━━━━━━━━━━//
+case 'menu': {
+let menu = `
+*┌ Bot Name* : *ZXBOT*
+*│ Version* : *1*
+*│ Language* : *NodeJs*
+*└ Baileys* : *@adiwashing/baileys*
+
+*L I S T - M E N U*
+*┌ ◦ .bayar*
+*│ ◦ .ownermenu*
+*│
+*—  D O W N L O A D M E N U ッ*  
+*│ ◦ .play*
+*│ ◦ .ytmp3 [link]*
+*│ ◦ .ytmp4 [link]*
+*│ ◦ .spotify*
+*│ ◦ .spotifydl [link]*
+*│ ◦ .tiktokmp4*
+*│ ◦ .tiktokmp3 [link]*
+*│ ◦ .fbdl [link]*
+*—  M A K E R  M E N U ッ*
+*│ ◦ .sticker*
+*│ ◦ .qc [teks]*
+*│ ◦ .attp [teks]*
+*│ ◦ .styletext [teks]*
+*│ ◦ .toimg*
+*│ ◦ .emojimix*
+*│ ◦ .tomp4*
+*│ ◦ .toaudio*
+*│ ◦ .tomp3*
+*│ ◦ .togif*
+*│ ◦ .tovn*
+*│ ◦ .beautiful*
+*│ ◦ .fire*
+*│ ◦ .jail*
+*│ ◦ .brazzers*
+*│ ◦ .triggered*
+*│ ◦ .postig*
+*│ ◦ .speak*
+*│ ◦ .smeme*`
+m.reply(`HI ${pushname} hallo ngaf😁👋\n\n` + menu + `\n\n${runtime(process.uptime())}`)
+}
+break
+case 'fbdl':
+if (args.length == 0) return m.reply(`Example: ${prefix + command} https://id-id.facebook.com/SamsungGulf/videos/video-bokeh/561108457758458/`)
+axios.get(`https://api.lolhuman.xyz/api/facebook?apikey=57c300f97a9673c00aa1e796&url=${args[0]}`).then(({ data }) => {
+agung.sendMessage(from, { video: { url: data.result }, mimetype: 'video/mp4' })
+})
+break
