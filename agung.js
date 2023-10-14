@@ -657,6 +657,10 @@ case 'kisahnabi': {
 				})
 				.catch(console.error)
 			break
+	case"sticker":case"s":if(!quoted)return reply(`Kirim/Reply Gambar/Video/Gifs Dengan Caption ${prefix + command}
+Durasi Video 1-9 Detik`);if(/image/.test(mime))await fs.unlinkSync(await agung.sendImageAsSticker(m.chat,await quoted.download(),m,{packname:global.packname,author:global.footer}));else if(/video/.test(mime)){if((quoted.msg||quoted).seconds>11)return reply("Kirim/Reply Gambar/Video/Gifs Dengan Caption ${prefix + command}\nDurasi Video 1-9 Detik");await fs.unlinkSync(await agung.sendVideoAsSticker(m.chat,await quoted.download(),m,{packname:global.packname,author:global.footer}))}else reply(`Kirim/Reply Gambar/Video/Gifs Dengan Caption ${prefix + command}
+Durasi Video 1-9 Detik`)
+break
 //━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
 
 default:
