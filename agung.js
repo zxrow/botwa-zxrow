@@ -557,6 +557,50 @@ memek = await agung.sendImageAsSticker(m.chat, meme, m, { packname: global.packn
 await fs.unlinkSync(memek)
 }
 break
+case 'jadwalsholat': {
+            case 'jadwalshalat':
+            case 'jadwalsolat':
+            case 'jadwalsalat': {
+                if (!text) return (`Contoh : ${prefix + command} Bandung`)
+                let res = await agung.jadwalsholat(text)  
+                let capt = `Jadwal Sholat Kota : ${text}\n\n`
+                let i = res
+                    capt += `• Tanggal : ${i.tanggal}\n`
+                    capt += `• Imsak : ${i.imsyak}\n`
+                    capt += `• Subuh : ${i.subuh}\n`
+                    capt += `• Dzuhur : ${i.dzuhur}\n`
+                    capt += `• Ashar : ${i.ashar}\n`
+                    capt += `• Maghrib : ${i.maghrib}\n`
+                    capt += `• Isya : ${i.isya}\n\n──────────────────────\n`
+                newReply(capt)
+            }
+            break
+case 'kisahnabi': {
+reply(mess.wait)
+axios.get(`https://api.lolhuman.xyz/api/kisahnabi/${full_args}?apikey=${global.lolhuman}`)
+	.then(({ data }) => {
+	   var text = `Name : ${data.result.name}\n`
+	   text += `Lahir : ${data.result.thn_kelahiran}\n`
+	   text += `Umur : ${data.result.age}\n`
+	   text += `Tempat : ${data.result.place}\n`
+	   text += `Story : \n${data.result.story}`
+	       reply(text)
+   })
+}
+       .catch(console.error)
+break
+case 'listsurah': {
+axios.get(`https://api.lolhuman.xyz/api/quran?apikey=${global.lolhuman}`)
+	.then(({ data }) => {
+	   var text = 'List Surah:\n'
+	   for (var x in data.result) {
+			text += `${x}. ${data.result[x]}\n`
+		}
+		reply(text)
+	})
+}
+	    .catch(console.error)
+	break
 //━━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
 
 default:
