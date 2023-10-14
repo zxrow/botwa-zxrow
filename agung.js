@@ -252,6 +252,7 @@ let menu = `
 *│ ◦ .ytmp4 [link]*
 *│ ◦ .spotify*
 *│ ◦ .spotifydl [link]*
+*│ ◦ .tiktoksearch [query*
 *│ ◦ .tiktokmp4*
 *│ ◦ .tiktokmp3 [link]*
 *│ ◦ .fbdl [link]*
@@ -284,3 +285,158 @@ axios.get(`https://api.lolhuman.xyz/api/facebook?apikey=57c300f97a9673c00aa1e796
 agung.sendMessage(from, { video: { url: data.result }, mimetype: 'video/mp4' })
 })
 break
+case 'ig2': {
+if (!text) return reply(`Gunakan dengan cara ${prefix + command} *url*`)
+reply(mess.wait)
+try{
+let anu = await fetchJson(`https://xzn.wtf/api/igdl?url=${text}&apikey=arel25`)
+agung.sendMessage(m.chat, { video: { url: anu.media}, caption: `Done Sayang >///<`}, {quoted: m})
+}catch (error) {
+reply(`Sorry this video can't be download\n\nPlease try typing .ig3 *url*`);
+}
+}
+break
+case 'play': case 'ytplay': {
+if (!text) throw `Example : ${prefix + command} story wa anime`
+let yts = require("yt-search")
+let search = await yts(text)
+let anu = search.videos[Math.floor(Math.random() * search.videos.length)]
+let buttons = [
+{buttonId: `ytmp3 ${anu.url}`, buttonText: {displayText: '♫ Audio'}, type: 1},
+{buttonId: `ytmp4 ${anu.url}`, buttonText: {displayText: '► Video'}, type: 1}
+]
+let buttonMessage = {
+image: { url: anu.thumbnail },
+caption: `
+あ Title : ${anu.title}
+あ Ext : Search
+あ Id : ${anu.videoId}
+🪀 Duration : ${anu.timestamp}
+あ Viewers : ${anu.views}
+あ Upload At : ${anu.ago}
+あ Author : ${anu.author.name}
+あ Channel : ${anu.author.url}
+あ Description : ${anu.description}
+あ Url : ${anu.url}`,
+footer: agung.user.name,
+buttons: buttons,
+headerType: 4
+}
+agung.sendMessage(m.chat, buttonMessage, { quoted: m })
+}
+break
+case 'ytmp4': case 'mp4':{
+if (!text) return m.reply('Masukan Link Nya!!!')
+reply(mess.wait)
+downloadMp4(text)
+}
+break
+case 'ytmp3': case 'mp3':{
+if (!text) return m.reply('Masukan Link Nya!!!')
+reply(mess.wait)
+downloadMp3(text)
+}
+break
+case 'spotify': {
+let anu = await fetchJson(`https://spotifyku.my.id/search?query=${text}`)
+let teks = `search from ${text}\n\n`
+for (let i of anu.data) {
+teks += `⭔ title: ${i.title}\n⭔ duration: ${i.duration}\n⭔ popularity: ${i.popularity}\n⭔ preview: ${i.preview}\n⭔ url: ${i.url}\n⭔ artist: ${i.artist}\n\n─────────────────\n\n`
+}
+agung.sendMessage(m.chat, { image: { url: anu.data[0].thumbnail }, caption: `${teks}` }, { quoted: fkontak })
+}
+break
+case 'spotifydl': {
+if (!text) throw `Example: ${prefix + command} username`
+reply(mess.wait)
+let buf = await getBuffer(`https://spotifyku.my.id/download?url=${text}`)
+agung.sendMessage(m.chat, { audio: buf, mimetype: 'audio/mpeg' }, { quoted: m })
+}
+break
+case "tiktokmp4": case 'tt': case 'ttnowm': case'tiktokwm': case'tiktoknowm': case'tiktok':{
+if (!text) return reply(`Gunakan dengan cara ${prefix+command} *url*\n\n_Contoh_\n\n${prefix+command} https://vt.tiktok.com/ZS8KdFQcQ/`)
+reply(mess.wait)
+try{
+let anu = await fetchJson(`https://xzn.wtf/api/tiktok?url=${text}&apikey=arel25`)
+agung.sendMessage(m.chat, { video: { url: anu.data.play}, caption: `Done Sayang >///<`}, {quoted: m})
+}catch (error) {
+reply(`Sorry this video can't be download\n\nRequest failed with status code *400*`);
+}
+}
+break
+case "tiktokmp3": case 'ttmp3': case'tiktokaudio':{
+if (!text) return reply(`Gunakan dengan cara ${prefix + command} *url*\n\n_Contoh_\n\n${prefix+command} https://vt.tiktok.com/ZS8KdFQcQ/`)
+reply(mess.wait)
+let anu = await fetchJson(`https://xzn.wtf/api/tiktok?url=${text}&apikey=arel25`)
+const aud = anu.data.music
+agung.sendMessage(m.chat, {audio : {url : aud}, mimetype:'audio/mpeg'}, {quoted:m})
+}
+break
+case 'tiktoksearch': case 'tiktoks': case 'ttsearch':{
+if (!text) return reply(`Gunakan dengan cara ${prefix + command} *query*\n\n_Contoh_\n\n${prefix+command} jj epep`)
+reply(mess.wait)
+try{
+let anu = await fetchJson(`https://xzn.wtf/api/ttsearch?search=${text}&apikey=arel25`)
+const capt = anu.title
+const author = anu.author.nickname
+agung.sendMessage(m.chat, { video: { url: anu.play}, caption: `💬 Caption : ${capt}\n👤 Author : ${author}`}, {quoted: m})
+}catch (error) {
+reply(`Sorry this video can't be download\n\nRequest failed with status code *400*`);
+}
+}
+break
+case 'speak':{
+if (!text) return reply(`Gunakan dengan cara ${prefix+command} text\n\nContoh : ${prefix+command} Halo semuanya`)
+await agung.sendPresenceUpdate('recording', m.chat);
+var suara = await fetchJson(`https://xzn.wtf/api/tts-anime?text=${text}&lang=mix&voice=paimon&speed=0.65&symbol=y&apikey=arel25`)
+agung.sendMessage(m.chat, {audio: {url: suara.data.url}, mimetype: 'audio/mpeg', ptt: true}, {quoted:m})
+}
+break
+case 'brazzers': case 'triggered': case 'jail': case 'rip': case 'wanted': case 'fire': case 'beautiful':  case 'wasted':{
+reply(mess.wait)
+if (!quoted) return reply(`Fotonya Mana?`)
+if (!/image/.test(mime)) return reply(`Send/Reply Foto Dengan Caption ${prefix + command}`)
+reply(mess.wait)
+const media = await agung.downloadAndSaveMediaMessage(quoted)
+const anu = await TelegraPH(media)
+agung.sendMessage(m.chat, { image: { url: `https://api.zeeoneofc.my.id/api/image-effect/${command}?apikey=sMwXPoIpCuIbVh2&url=${anu}` }, caption: 'Done Ayang >///<'}, { quoted: m})
+}
+break
+case 'postig': {
+if (!quoted) return reply(`Fotonya Mana?`)
+if (!/image/.test(mime)) return reply(`Send/Reply Foto Dengan Caption ${prefix + command}`)
+reply(mess.wait)
+const media = await agung.downloadAndSaveMediaMessage(quoted)
+const anu = await TelegraPH(media)
+agung.sendMessage(m.chat, { image: { url: `https://api.zeeoneofc.my.id/api/image-effect/instagram2?apikey=sMwXPoIpCuIbVh2&url=${anu}` }, caption: 'Cie Fotonya Dipost Bot'}, { quoted: m})
+}
+break
+//━━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
+
+default:
+if ((budy) && ["assalamu'alaikum", "Assalamu'alaikum", "Assalamualaikum", "assalamualaikum", "Assalammualaikum", "assalammualaikum", "Asalamualaikum", "asalamualaikum", "Asalamu'alaikum", " asalamu'alaikum"].includes(budy) && !isCmd) {
+agung.sendMessage(from, { text: `${pickRandom(["Wa'alaikumussalam","Wa'alaikumussalam Wb.","Wa'alaikumussalam Wr. Wb.","Wa'alaikumussalam Warahmatullahi Wabarakatuh"])}`})
+}
+}
+if (budy.startsWith('>')) {
+if (!isCreator) return m.reply(`Lu Siapa Ngentot?Ini Cuman Khusus agung Sayang ku♥️`)
+try {
+let evaled = await eval(budy.slice(2))
+if (typeof evaled !== 'string') evaled = require('util').inspect(evaled)
+await m.reply(evaled)
+} catch (err) {
+m.reply(String(err))
+}
+}
+} catch (err) {
+m.reply(util.format(err))
+}
+}
+
+let file = require.resolve(__filename)
+fs.watchFile(file, () => {
+fs.unwatchFile(file)
+console.log(chalk.yellowBright(`Update File Terbaru ${__filename}`))
+delete require.cache[file]
+require(file)
+})
