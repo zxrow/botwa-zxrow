@@ -275,7 +275,14 @@ let menu = `
 *│ ◦ .postig*
 *│ ◦ .tourl*
 *│ ◦ .speak*
-*│ ◦ .smeme*`
+*│ ◦ .smeme*
+*—  I S L A M I C  M E N U ッ*
+*│ ◦ .jadwalsholat*
+*│ ◦ .tafsirsurah*
+*│ ◦ .alquranaudio*
+*│ ◦ .alquran*
+*│ ◦ .kisahnabi*
+*│ ◦ .listsurah*`
 m.reply(`HI ${pushname} hallo ngaf😁👋\n\n` + menu + `\n\n${runtime(process.uptime())}`)
 }
 break
@@ -575,33 +582,82 @@ case 'jadwalsholat': {
                 newReply(capt)
             }
             break
+	case 'tafsirsurah': {
+                if (!args[0]) return `Contoh penggunaan:\n${prefix + command} 1 2\n\nmaka hasilnya adalah tafsir surah Al-Fatihah ayat 2`
+                if (!args[1]) return `Contoh penggunaan:\n${prefix + command} 1 2\n\nmaka hasilnya adalah tafsir surah Al-Fatihah ayat 2`
+                let res = await fetchJson(`https://islamic-api-indonesia.herokuapp.com/api/data/quran?surah=${args[0]}&ayat=${args[1]}`)
+                let txt = `「 *Tafsir Surah*  」
+
+*Pendek* : ${res.result.data.tafsir.id.short}
+
+*Panjang* : ${res.result.data.tafsir.id.long}
+
+( Q.S ${res.result.data.surah.name.transliteration.id} : ${res.result.data.number.inSurah} )`
+                reply(txt)
+            }
+            break
+case 'asmaulhusna':
+            reply(mess.wait)
+			axios.get(`https://api.lolhuman.xyz/api/asmaulhusna?apikey=${lolhuman}`)
+				.then(({ data }) => {
+					var text = `No : ${data.result.index}\n`
+					text += `Latin: ${data.result.latin}\n`
+					text += `Arab : ${data.result.ar}\n`
+					text += `Indonesia : ${data.result.id}\n`
+					text += `English : ${data.result.en}`
+					reply(text)
+				})
+				.catch(console.error)
+			break
+			case 'alquranaudio': {
+                if (args.length == 0) return newReply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10`)
+                reply(mess.wait)
+                agung.sendMessage(m.chat, { audio: { url: `https://api.lolhuman.xyz/api/quran/audio/${args[0]}?apikey=${lolhuman}`}, mimetype: 'audio/mp4', ptt: true }, { quoted: m })
+            }
+            break
+            case 'alquran':
+			if (args.length < 1) return newReply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10 or ${prefix + command} 18/1-10`)
+			reply(mess.wait)
+			axios.get(`https://api.lolhuman.xyz/api/quran/${args[0]}?apikey=${lolhuman}`)
+				.then(({ data }) => {
+					var ayat = data.result.ayat
+					var text = `QS. ${data.result.surah} : 1-${ayat.length}\n\n`
+					for (var x of ayat) {
+						text += `${x.arab}\n${x.ayat}. ${x.latin}\n${x.indonesia}\n\n`
+					}
+					text = text.replace(/<u>/g, '_').replace(/<\/u>/g, '_')
+					text = text.replace(/<strong>/g, '*').replace(/<\/strong>/g, '*')
+					reply(text)
+				})
+				.catch(console.error)
+            break
 case 'kisahnabi': {
-reply(mess.wait)
-axios.get(`https://api.lolhuman.xyz/api/kisahnabi/${full_args}?apikey=${global.lolhuman}`)
-	.then(({ data }) => {
-	   var text = `Name : ${data.result.name}\n`
-	   text += `Lahir : ${data.result.thn_kelahiran}\n`
-	   text += `Umur : ${data.result.age}\n`
-	   text += `Tempat : ${data.result.place}\n`
-	   text += `Story : \n${data.result.story}`
-	       reply(text)
-   })
-}
-       .catch(console.error)
-break
-case 'listsurah': {
-axios.get(`https://api.lolhuman.xyz/api/quran?apikey=${global.lolhuman}`)
-	.then(({ data }) => {
-	   var text = 'List Surah:\n'
-	   for (var x in data.result) {
-			text += `${x}. ${data.result[x]}\n`
-		}
-		reply(text)
-	})
-}
-	    .catch(console.error)
-	break
-//━━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
+			if (args.length == 0) return newReply(`Example: ${prefix + command} Muhammad`)
+			reply(mess.wait)
+			axios.get(`https://api.lolhuman.xyz/api/kisahnabi/${full_args}?apikey=${lolhuman}`)
+				.then(({ data }) => {
+					var text = `Name : ${data.result.name}\n`
+					text += `Lahir : ${data.result.thn_kelahiran}\n`
+					text += `Umur : ${data.result.age}\n`
+					text += `Tempat : ${data.result.place}\n`
+					text += `Story : \n${data.result.story}`
+					reply(text)
+				})
+				.catch(console.error)
+			break
+            case 'listsurah':
+            reply(mess.wait)
+			axios.get(`https://api.lolhuman.xyz/api/quran?apikey=${lolhuman}`)
+				.then(({ data }) => {
+					var text = 'List Surah:\n'
+					for (var x in data.result) {
+						text += `${x}. ${data.result[x]}\n`
+					}
+					reply(text)
+				})
+				.catch(console.error)
+			break
+//━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
 
 default:
 if ((budy) && ["assalamu'alaikum", "Assalamu'alaikum", "Assalamualaikum", "assalamualaikum", "Assalammualaikum", "assalammualaikum", "Asalamualaikum", "asalamualaikum", "Asalamu'alaikum", " asalamu'alaikum"].includes(budy) && !isCmd) {
