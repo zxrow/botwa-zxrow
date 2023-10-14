@@ -274,6 +274,7 @@ let menu = `
 *│ ◦ .brazzers*
 *│ ◦ .triggered*
 *│ ◦ .postig*
+*│ ◦ .tourl*
 *│ ◦ .speak*
 *│ ◦ .smeme*`
 m.reply(`HI ${pushname} hallo ngaf😁👋\n\n` + menu + `\n\n${runtime(process.uptime())}`)
@@ -409,6 +410,152 @@ reply(mess.wait)
 const media = await agung.downloadAndSaveMediaMessage(quoted)
 const anu = await TelegraPH(media)
 agung.sendMessage(m.chat, { image: { url: `https://api.zeeoneofc.my.id/api/image-effect/instagram2?apikey=sMwXPoIpCuIbVh2&url=${anu}` }, caption: 'Cie Fotonya Dipost Bot'}, { quoted: m})
+}
+break
+case 'qc': {
+const { quote } = require('./lib/quote.js')
+            if (!q) return ('Masukan Text')
+            let ppnyauser = await await agung.profilePictureUrl(m.sender, 'image').catch(_=> 'https://telegra.ph/file/6880771a42bad09dd6087.jpg')
+            const rest = await quote(q, pushname, ppnyauser)
+            reply(mess.wait)
+            agung.sendImageAsSticker(m.chat, rest.result, m, { packname: `${global.packname}`, author: `${global.author}`})
+            }
+            break
+        case 'attp': {
+                try {
+                if (args.length == 0) return reply(`Example: ${prefix + command} Henzz`)
+                await agung.sendMessage(m.chat, {sticker: {url:`https://api.lolhuman.xyz/api/attp?apikey=${global.lolhuman}&text=${full_args}` }}, { quoted: m })
+            } catch (e) {
+                reply(mess.error)
+            }
+            }
+            break
+case 'style': case 'styletext': {
+let { styletext } = require('./lib/scraper')
+if (!text) throw 'Masukkan Query text!'
+let anu = await styletext(text)
+let teks = `Srtle Text From ${text}\n\n`
+for (let i of anu) {
+teks += `⭔ *${i.name}* : ${i.result}\n\n`
+}
+m.reply(teks)
+}
+break
+case 'toimage': case 'toimg': {
+if (!quoted) throw 'Reply Image'
+if (!/webp/.test(mime)) throw `Balas sticker dengan caption *${prefix + command}*`
+let media = await agung.downloadAndSaveMediaMessage(quoted)
+let ran = await getRandom('.png')
+exec(`ffmpeg -i ${media} ${ran}`, (err) => {
+fs.unlinkSync(media)
+if (err) throw err
+let buffer = fs.readFileSync(ran)
+agung.sendMessage(from, { image: buffer }, { quoted:m })
+fs.unlinkSync(ran)
+})
+}
+break
+case 'tomp4': 
+	        case 'tovideo': {
+                if (!/webp/.test(mime)) return reply(`newReply stiker dengan caption *${prefix + command}*`)
+                reply(mess.wait)
+                let media = await agung.downloadAndSaveMediaMessage(quoted)
+                let webpToMp4 = await webp2mp4File(media)
+                await agung.sendMessage(m.chat, { video: { url: webpToMp4.result, caption: 'Convert Webp To Video' } }, { quoted: m })
+                await fs.unlinkSync(media)
+                
+            }
+            break
+            
+            case 'toaud': 
+            case 'toaudio': {
+            if (!/video/.test(mime) && !/audio/.test(mime)) return reply(`Kirim/newReply Video/Audio Yang Ingin Dijadikan Audio Dengan Caption ${prefix + command}`)
+            newReply(mess.wait)
+            let media = await agung.downloadMediaMessage(quoted)
+            let audio = await toAudio(media, 'mp4')
+            agung.sendMessage(m.chat, {audio: audio, mimetype: 'audio/mpeg'}, { quoted : m })
+            
+            }
+            break
+            
+            case 'tomp3': {
+            if (!/video/.test(mime) && !/audio/.test(mime)) return reply(`Kirim/newReply Video/Audio Yang Ingin Dijadikan MP3 Dengan Caption ${prefix + command}`)
+            reply(mess.wait)
+            let media = await agung.downloadMediaMessage(quoted)
+            let audio = await toAudio(media, 'mp4')
+            agung.sendMessage(m.chat, {document: audio, mimetype: 'audio/mpeg', fileName: `Convert By zxagung`}, { quoted : m })
+            
+            }
+            break
+            
+            case 'tovn': 
+            case 'toptt': {
+            if (!/video/.test(mime) && !/audio/.test(mime)) return reply(`newReply Video/Audio Yang Ingin Dijadikan VN Dengan Caption ${prefix + command}`)
+            reply(mess.wait)
+            let media = await agung.downloadMediaMessage(quoted)
+            let { toPTT } = require('./lib/converter')
+            let audio = await toPTT(media, 'mp4')
+            agung.sendMessage(m.chat, {audio: audio, mimetype:'audio/mpeg', ptt:true }, {quoted:m})
+            
+            }
+            break
+            
+            case 'togif': {
+                if (!/webp/.test(mime)) return reply(`newReply stiker dengan caption *${prefix + command}*`)
+                reply(mess.wait)
+                let media = await agung.downloadAndSaveMediaMessage(quoted)
+                let webpToMp4 = await webp2mp4File(media)
+                await agung.sendMessage(m.chat, { video: { url: webpToMp4.result, caption: 'Convert Webp To Video' }, gifPlayback: true }, { quoted: m })
+                await fs.unlinkSync(media)
+                
+            }
+            break
+case "emojimix": {
+if (!quoted) return m.reply(`*Ngetik Yg Bener Dek!!* ${prefix + command}`) 
+let [emoji1, emoji2] = text.split`+`
+if (!emoji1) return m.reply(`Example : ${prefix + command} 😅+🤔`) 
+if (!emoji2) return m.reply(`Example : ${prefix + command} 😅+🤔`) 
+let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`)
+for (let res of anu.results) {
+let encmedia = await agung.sendImageAsSticker(m.chat, res.url, m, { packname: global.packname, author: global.author, categories: res.tags })
+await fs.unlinkSync(encmedia)
+}
+}
+break
+case "tourl":{
+if (isImage || isQuotedImage) {
+const fileName = fs.readdirSync("./lib").length + 1
+const media = await agung.downloadAndSaveMediaMessage(quoted, `./lib/${fileName}`)
+const anu = await UploadFileUgu(media)
+await m.reply(anu.url)
+} else if (isVideo || isQuotedVideo) {
+const fileName = fs.readdirSync("./lib").length + 1
+const media = await agung.downloadAndSaveMediaMessage(quoted, `./lib/${fileName}`)
+const anu = await UploadFileUgu(media)
+await m.reply(anu.url)
+} else if (isQuotedAudio) {
+const fileName = fs.readdirSync("./lib").length + 1
+const media = await agung.downloadAndSaveMediaMessage(quoted, `./lib/${fileName}`)
+const anu = await UploadFileUgu(media)
+await m.reply(anu.url)
+} else if (isQuotedSticker) {
+const fileName = fs.readdirSync("./lib").length + 1
+const media = await agung.downloadAndSaveMediaMessage(quoted, `./lib/${fileName}`)
+const anu = await UploadFileUgu(media)
+await m.reply(anu.url)
+} else m.reply(`Use photos/videos or Reply photos/videos/sticker/audio with captions ${prefix + command}`) 
+}
+break
+case "smeme": case "stickermeme": case "stickmeme": {
+if (!text) return m.reply(`Kirim/Reply Foto Dengan Caption ${prefix + command} *teks*`)
+if (text.includes("|")) return m.reply(`Kirim/Reply Foto Dengan Caption ${prefix + command} *teks*`)
+if (!/image/.test(mime)) return m.reply(`Kirim/Reply Foto Dengan Caption ${prefix + command} *teks*`)
+arg = args.join(" ")
+mee = await agung.downloadAndSaveMediaMessage(quoted)
+mem = await TelegraPh(mee)
+meme = `https://api.memegen.link/images/custom/-/${arg}.png?background=${mem}`
+memek = await agung.sendImageAsSticker(m.chat, meme, m, { packname: global.packname, author: global.author })
+await fs.unlinkSync(memek)
 }
 break
 //━━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
