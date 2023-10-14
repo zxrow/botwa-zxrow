@@ -174,7 +174,6 @@ m.reply(`${err}`)
 }
 
 
-//RPGGAMES
 
 //=================================================//
 //=================================================//
@@ -282,7 +281,7 @@ m.reply(`HI ${pushname} hallo ngaf😁👋\n\n` + menu + `\n\n${runtime(process.
 break
 case 'fbdl':
 if (args.length == 0) return m.reply(`Example: ${prefix + command} https://id-id.facebook.com/SamsungGulf/videos/video-bokeh/561108457758458/`)
-axios.get(`https://api.lolhuman.xyz/api/facebook?apikey=57c300f97a9673c00aa1e796&url=${args[0]}`).then(({ data }) => {
+axios.get(`https://api.lolhuman.xyz/api/facebook?apikey={global.lolhuman}&url=${args[0]}`).then(({ data }) => {
 agung.sendMessage(from, { video: { url: data.result }, mimetype: 'video/mp4' })
 })
 break
@@ -290,7 +289,7 @@ case 'ig2': {
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *url*`)
 reply(mess.wait)
 try{
-let anu = await fetchJson(`https://xzn.wtf/api/igdl?url=${text}&apikey=arel25`)
+let anu = await fetchJson(`https://xzn.wtf/api/igdl?url=${text}&apikey={global.xznkey}`)
 agung.sendMessage(m.chat, { video: { url: anu.media}, caption: `Done Sayang >///<`}, {quoted: m})
 }catch (error) {
 reply(`Sorry this video can't be download\n\nPlease try typing .ig3 *url*`);
@@ -358,7 +357,7 @@ case "tiktokmp4": case 'tt': case 'ttnowm': case'tiktokwm': case'tiktoknowm': ca
 if (!text) return reply(`Gunakan dengan cara ${prefix+command} *url*\n\n_Contoh_\n\n${prefix+command} https://vt.tiktok.com/ZS8KdFQcQ/`)
 reply(mess.wait)
 try{
-let anu = await fetchJson(`https://xzn.wtf/api/tiktok?url=${text}&apikey=arel25`)
+let anu = await fetchJson(`https://xzn.wtf/api/tiktok?url=${text}&apikey={global.xznkey}`)
 agung.sendMessage(m.chat, { video: { url: anu.data.play}, caption: `Done Sayang >///<`}, {quoted: m})
 }catch (error) {
 reply(`Sorry this video can't be download\n\nRequest failed with status code *400*`);
@@ -368,7 +367,7 @@ break
 case "tiktokmp3": case 'ttmp3': case'tiktokaudio':{
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *url*\n\n_Contoh_\n\n${prefix+command} https://vt.tiktok.com/ZS8KdFQcQ/`)
 reply(mess.wait)
-let anu = await fetchJson(`https://xzn.wtf/api/tiktok?url=${text}&apikey=arel25`)
+let anu = await fetchJson(`https://xzn.wtf/api/tiktok?url=${text}&apikey={global.xznkey}`)
 const aud = anu.data.music
 agung.sendMessage(m.chat, {audio : {url : aud}, mimetype:'audio/mpeg'}, {quoted:m})
 }
@@ -377,7 +376,7 @@ case 'tiktoksearch': case 'tiktoks': case 'ttsearch':{
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *query*\n\n_Contoh_\n\n${prefix+command} jj epep`)
 reply(mess.wait)
 try{
-let anu = await fetchJson(`https://xzn.wtf/api/ttsearch?search=${text}&apikey=arel25`)
+let anu = await fetchJson(`https://xzn.wtf/api/ttsearch?search=${text}&apikey={global.xznkey}`)
 const capt = anu.title
 const author = anu.author.nickname
 agung.sendMessage(m.chat, { video: { url: anu.play}, caption: `💬 Caption : ${capt}\n👤 Author : ${author}`}, {quoted: m})
@@ -400,7 +399,7 @@ if (!/image/.test(mime)) return reply(`Send/Reply Foto Dengan Caption ${prefix +
 reply(mess.wait)
 const media = await agung.downloadAndSaveMediaMessage(quoted)
 const anu = await TelegraPH(media)
-agung.sendMessage(m.chat, { image: { url: `https://api.zeeoneofc.my.id/api/image-effect/${command}?apikey=sMwXPoIpCuIbVh2&url=${anu}` }, caption: 'Done Ayang >///<'}, { quoted: m})
+agung.sendMessage(m.chat, { image: { url: `https://api.zeeoneofc.my.id/api/image-effect/${command}?apikey={global.zeeofckey}&url=${anu}` }, caption: 'Done Ayang >///<'}, { quoted: m})
 }
 break
 case 'postig': {
@@ -409,7 +408,7 @@ if (!/image/.test(mime)) return reply(`Send/Reply Foto Dengan Caption ${prefix +
 reply(mess.wait)
 const media = await agung.downloadAndSaveMediaMessage(quoted)
 const anu = await TelegraPH(media)
-agung.sendMessage(m.chat, { image: { url: `https://api.zeeoneofc.my.id/api/image-effect/instagram2?apikey=sMwXPoIpCuIbVh2&url=${anu}` }, caption: 'Cie Fotonya Dipost Bot'}, { quoted: m})
+agung.sendMessage(m.chat, { image: { url: `https://api.zeeoneofc.my.id/api/image-effect/instagram2?apikey={global.zeeofckey}&url=${anu}` }, caption: 'Cie Fotonya Dipost Bot'}, { quoted: m})
 }
 break
 case 'qc': {
@@ -457,7 +456,7 @@ fs.unlinkSync(ran)
 break
 case 'tomp4': 
 	        case 'tovideo': {
-                if (!/webp/.test(mime)) return reply(`newReply stiker dengan caption *${prefix + command}*`)
+                if (!/webp/.test(mime)) return reply(`Reply stiker dengan caption *${prefix + command}*`)
                 reply(mess.wait)
                 let media = await agung.downloadAndSaveMediaMessage(quoted)
                 let webpToMp4 = await webp2mp4File(media)
@@ -501,7 +500,7 @@ case 'tomp4':
             break
             
             case 'togif': {
-                if (!/webp/.test(mime)) return reply(`newReply stiker dengan caption *${prefix + command}*`)
+                if (!/webp/.test(mime)) return reply(`Reply stiker dengan caption *${prefix + command}*`)
                 reply(mess.wait)
                 let media = await agung.downloadAndSaveMediaMessage(quoted)
                 let webpToMp4 = await webp2mp4File(media)
