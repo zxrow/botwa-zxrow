@@ -1,14 +1,14 @@
 const fs = require('fs')
 const chalk = require('chalk')
 
-global.domain = "https://zefta.storepanel.biz.id/" // Isi Domain Lu
+global.domain = "-" // Isi Domain Lu
 global.apikey = 'ptla_u4Q3mNzKGYs7GPC8773UEuIABa7vY56rKuw2afajcWc' // Isi Apikey Plta Lu
 global.capikey = 'ptlc_UmAOKHhXTfRoNk1Y8Fiotqh6IMvkXalty3MvJpnG7bF' // Isi Apikey Pltc Lu
 global.facebook = ('./scrap/facebook')//installfbvideo
-global.creAtor = "6289655478810@s.whatsapp.net"
-global.owner = ['6289655478810']
-global.ownerNumber = ["6289655478810@s.whatsapp.net"]
-global.nomerOwner = "6289655478810"
+global.creAtor = "inigntinmrlu@s.whatsapp.net"
+global.owner = ['nigantinmrlu']
+global.ownerNumber = ["inigantinmrlu@s.whatsapp.net"]
+global.nomerOwner = "inigantinmrlu"
 global.namabotnya = 'agung SEND PANEL'
 global.namaownernya = 'agungDev'
 global.packname = '© By agung!'
