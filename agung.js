@@ -613,13 +613,13 @@ case 'asmaulhusna': {
 			case 'alquranaudio': {
                 if (args.length == 0) return newReply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10`)
                 reply(mess.wait)
-                agung.sendMessage(m.chat, { audio: { url: `https://api.lolhuman.xyz/api/quran/audio/${args[0]}?apikey=${lolhuman}`}, mimetype: 'audio/mp4', ptt: true }, { quoted: m })
+                agung.sendMessage(m.chat, { audio: { url: `https://api.lolhuman.xyz/api/quran/audio/${args[0]}?apikey=${global.lolhuman}`}, mimetype: 'audio/mp4', ptt: true }, { quoted: m })
             }
             break
             case 'alquran': {
 			if (args.length < 1) return newReply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10 or ${prefix + command} 18/1-10`)
 			reply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/quran/${args[0]}?apikey=${lolhuman}`)
+			axios.get(`https://api.lolhuman.xyz/api/quran/${args[0]}?apikey=${global.lolhuman}`)
 				.then(({ data }) => {
 					var ayat = data.result.ayat
 					var text = `QS. ${data.result.surah} : 1-${ayat.length}\n\n`
