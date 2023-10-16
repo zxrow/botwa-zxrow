@@ -476,7 +476,7 @@ case 'tomp4':
             case 'toaud': 
             case 'toaudio': {
             if (!/video/.test(mime) && !/audio/.test(mime)) return reply(`Kirim/newReply Video/Audio Yang Ingin Dijadikan Audio Dengan Caption ${prefix + command}`)
-            newReply(mess.wait)
+            reply(mess.wait)
             let media = await agung.downloadMediaMessage(quoted)
             let audio = await toAudio(media, 'mp4')
             agung.sendMessage(m.chat, {audio: audio, mimetype: 'audio/mpeg'}, { quoted : m })
@@ -579,7 +579,7 @@ case 'jadwalsholat': {
                     capt += `• Ashar : ${i.ashar}\n`
                     capt += `• Maghrib : ${i.maghrib}\n`
                     capt += `• Isya : ${i.isya}\n\n──────────────────────\n`
-                newReply(capt)
+                reply(capt)
             }
             break
 	case 'tafsirsurah': {
@@ -598,7 +598,7 @@ case 'jadwalsholat': {
             break
 case 'asmaulhusna': {
             reply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/asmaulhusna?apikey=${lolhuman}`)
+			axios.get(`https://api.lolhuman.xyz/api/asmaulhusna?apikey=${global.lolhuman}`)
 				.then(({ data }) => {
 					var text = `No : ${data.result.index}\n`
 					text += `Latin: ${data.result.latin}\n`
@@ -611,13 +611,13 @@ case 'asmaulhusna': {
 				.catch(console.error)
 			break
 			case 'alquranaudio': {
-                if (args.length == 0) return newReply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10`)
+                if (args.length == 0) return reply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10`)
                 reply(mess.wait)
                 agung.sendMessage(m.chat, { audio: { url: `https://api.lolhuman.xyz/api/quran/audio/${args[0]}?apikey=${global.lolhuman}`}, mimetype: 'audio/mp4', ptt: true }, { quoted: m })
             }
             break
             case 'alquran': {
-			if (args.length < 1) return newReply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10 or ${prefix + command} 18/1-10`)
+			if (args.length < 1) return reply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10 or ${prefix + command} 18/1-10`)
 			reply(mess.wait)
 			axios.get(`https://api.lolhuman.xyz/api/quran/${args[0]}?apikey=${global.lolhuman}`)
 				.then(({ data }) => {
@@ -634,9 +634,9 @@ case 'asmaulhusna': {
 				.catch(console.error)
             break
 case 'kisahnabi': {
-			if (args.length == 0) return newReply(`Example: ${prefix + command} Muhammad`)
+			if (args.length == 0) return reply(`Example: ${prefix + command} Muhammad`)
 			reply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/kisahnabi/${full_args}?apikey=${lolhuman}`)
+			axios.get(`https://api.lolhuman.xyz/api/kisahnabi/${full_args}?apikey=${global.lolhuman}`)
 				.then(({ data }) => {
 					var text = `Name : ${data.result.name}\n`
 					text += `Lahir : ${data.result.thn_kelahiran}\n`
@@ -650,7 +650,7 @@ case 'kisahnabi': {
 			break
             case 'listsurah': {
             reply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/quran?apikey=${lolhuman}`)
+			axios.get(`https://api.lolhuman.xyz/api/quran?apikey=${global.lolhuman}`)
 				.then(({ data }) => {
 					var text = 'List Surah:\n'
 					for (var x in data.result) {
