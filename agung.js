@@ -90,6 +90,144 @@ return {
 img: await resz.getBufferAsync(Jimp.MIME_JPEG)
 }
 }
+//TicTacToe
+    this.game = this.game ? this.game : {}
+    let room = Object.values(this.game).find(room => room.id && room.game && room.state && room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender) && room.state == 'PLAYING')
+    if (room) {
+    let ok
+    let isWin = !1
+    let isTie = !1
+    let isSurrender = !1
+    // m.reply(`[DEBUG]\n${parseInt(m.text)}`)
+    if (!/^([1-9]|(me)?nyerah|surr?ender|off|skip)$/i.test(m.text)) return
+    isSurrender = !/^[1-9]$/.test(m.text)
+    if (m.sender !== room.game.currentTurn) { // nek wayahku
+    if (!isSurrender) return !0
+    }
+    if (!isSurrender && 1 > (ok = room.game.turn(m.sender === room.game.playerO, parseInt(m.text) - 1))) {
+    m.reply({
+    '-3': 'Game telah berakhir',
+    '-2': 'Invalid',
+    '-1': 'Posisi Invalid',
+    0: 'Posisi Invalid',
+    }[ok])
+    return !0
+    }
+    if (m.sender === room.game.winner) isWin = true
+    else if (room.game.board === 511) isTie = true
+    let arr = room.game.render().map(v => {
+    return {
+    X: '❌',
+    O: '⭕',
+    1: '1️⃣',
+    2: '2️⃣',
+    3: '3️⃣',
+    4: '4️⃣',
+    5: '5️⃣',
+    6: '6️⃣',
+    7: '7️⃣',
+    8: '8️⃣',
+    9: '9️⃣',
+    }[v]
+    })
+    if (isSurrender) {
+    room.game._currentTurn = m.sender === room.game.playerX
+    isWin = true
+    }
+    let winner = isSurrender ? room.game.currentTurn : room.game.winner
+    let str = `Room ID: ${room.id}
+
+${arr.slice(0, 3).join('')}
+${arr.slice(3, 6).join('')}
+${arr.slice(6).join('')}
+
+${isWin ? `@${winner.split('@')[0]} Menang!` : isTie ? `Game berakhir` : `Giliran ${['❌', '⭕'][1 * room.game._currentTurn]} (@${room.game.currentTurn.split('@')[0]})`}
+❌: @${room.game.playerX.split('@')[0]}
+⭕: @${room.game.playerO.split('@')[0]}
+
+Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
+    if ((room.game._currentTurn ^ isSurrender ? room.x : room.o) !== from)
+    room[room.game._currentTurn ^ isSurrender ? 'x' : 'o'] = from
+    if (room.x !== room.o) await agung.sendText(room.x, str, m, { mentions: parseMention(str) } )
+    await agung.sendText(room.o, str, m, { mentions: parseMention(str) } )
+    if (isTie || isWin) {
+    delete this.game[room.id]
+    }
+    }
+    //Suit PvP
+    this.suit = this.suit ? this.suit : {}
+    let roof = Object.values(this.suit).find(roof => roof.id && roof.status && [roof.p, roof.p2].includes(m.sender))
+    if (roof) {
+    let win = ''
+    let tie = false
+    if (m.sender == roof.p2 && /^(acc(ept)?|terima|gas|oke?|tolak|gamau|nanti|ga(k.)?bisa|y)/i.test(m.text) && m.isGroup && roof.status == 'wait') {
+    if (/^(tolak|gamau|nanti|n|ga(k.)?bisa)/i.test(m.text)) {
+    agung.sendTextWithMentions(from, `@${roof.p2.split`@`[0]} menolak suit, suit dibatalkan`, m)
+    delete this.suit[roof.id]
+    return !0
+    }
+    roof.status = 'play'
+    roof.asal = from
+    clearTimeout(roof.waktu)
+    //delete roof[roof.id].waktu
+    agung.sendText(from, `Suit telah dikirimkan ke chat
+
+@${roof.p.split`@`[0]} dan 
+@${roof.p2.split`@`[0]}
+
+Silahkan pilih suit di chat masing"
+klik https://wa.me/${botNumber.split`@`[0]}`, m, { mentions: [roof.p, roof.p2] })
+    if (!roof.pilih) agung.sendText(roof.p, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
+    if (!roof.pilih2) agung.sendText(roof.p2, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
+    roof.waktu_milih = setTimeout(() => {
+    if (!roof.pilih && !roof.pilih2) agung.sendText(from, `Kedua pemain tidak niat main,\nSuit dibatalkan`)
+    else if (!roof.pilih || !roof.pilih2) {
+    win = !roof.pilih ? roof.p2 : roof.p
+    agung.sendTextWithMentions(from, `@${(roof.pilih ? roof.p2 : roof.p).split`@`[0]} tidak memilih suit, game berakhir`, m)
+    }
+    delete this.suit[roof.id]
+    return !0
+    }, roof.timeout)
+    }
+    let jwb = m.sender == roof.p
+    let jwb2 = m.sender == roof.p2
+    let g = /gunting/i
+    let b = /batu/i
+    let k = /kertas/i
+    let reg = /^(gunting|batu|kertas)/i
+    if (jwb && reg.test(m.text) && !roof.pilih && !m.isGroup) {
+    roof.pilih = reg.exec(m.text.toLowerCase())[0]
+    roof.text = m.text
+    m.reply(`Kamu telah memilih ${m.text} ${!roof.pilih2 ? `\n\nMenunggu lawan memilih` : ''}`)
+    if (!roof.pilih2) agung.sendText(roof.p2, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
+    }
+    if (jwb2 && reg.test(m.text) && !roof.pilih2 && !m.isGroup) {
+    roof.pilih2 = reg.exec(m.text.toLowerCase())[0]
+    roof.text2 = m.text
+    m.reply(`Kamu telah memilih ${m.text} ${!roof.pilih ? `\n\nMenunggu lawan memilih` : ''}`)
+    if (!roof.pilih) agung.sendText(roof.p, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
+    }
+    let stage = roof.pilih
+    let stage2 = roof.pilih2
+    if (roof.pilih && roof.pilih2) {
+    clearTimeout(roof.waktu_milih)
+    if (b.test(stage) && g.test(stage2)) win = roof.p
+    else if (b.test(stage) && k.test(stage2)) win = roof.p2
+    else if (g.test(stage) && k.test(stage2)) win = roof.p
+    else if (g.test(stage) && b.test(stage2)) win = roof.p2
+    else if (k.test(stage) && b.test(stage2)) win = roof.p
+    else if (k.test(stage) && g.test(stage2)) win = roof.p2
+    else if (stage == stage2) tie = true
+    agung.sendText(roof.asal, `_*Hasil Suit*_${tie ? '\nSERI' : ''}
+
+@${roof.p.split`@`[0]} (${roof.text}) ${tie ? '' : roof.p == win ? ` Menang \n` : ` Kalah \n`}
+@${roof.p2.split`@`[0]} (${roof.text2}) ${tie ? '' : roof.p2 == win ? ` Menang \n` : ` Kalah \n`}
+`.trim(), m, { mentions: [roof.p, roof.p2] })
+    delete this.suit[roof.id]
+    }
+    }
+    async function tiktokdl(url) {
+    try {
 const tokenn = await axios.get("https://downvideo.quora-wiki.com/tiktok-video-downloader#url=" + url);
 let a = cheerio.load(tokenn.data);
 let token = a("#token").attr("value");
@@ -174,6 +312,7 @@ m.reply(`${err}`)
 }
 
 
+//RPGGAMES
 
 //=================================================//
 //=================================================//
@@ -233,6 +372,7 @@ fs.writeFileSync('./database/user.json', JSON.stringify(_db, null, 3))
 }
 
 switch (command) {
+//━━━━━━━━━━━━━━━[ MENU ]━━━━━━━━━━━━━━━━━//
 //━━━━━━━━━━━━━━━[ MENU ]━━━━━━━━━━━━━━━━━//
 case 'menu': {
 let menu = `
@@ -564,103 +704,6 @@ memek = await agung.sendImageAsSticker(m.chat, meme, m, { packname: global.packn
 await fs.unlinkSync(memek)
 }
 break
-case 'jadwalsholat': {
-            case 'jadwalshalat':
-            case 'jadwalsolat':
-            case 'jadwalsalat': {
-                if (!text) return (`Contoh : ${prefix + command} Bandung`)
-                let res = await agung.jadwalsholat(text)  
-                let capt = `Jadwal Sholat Kota : ${text}\n\n`
-                let i = res
-                    capt += `• Tanggal : ${i.tanggal}\n`
-                    capt += `• Imsak : ${i.imsyak}\n`
-                    capt += `• Subuh : ${i.subuh}\n`
-                    capt += `• Dzuhur : ${i.dzuhur}\n`
-                    capt += `• Ashar : ${i.ashar}\n`
-                    capt += `• Maghrib : ${i.maghrib}\n`
-                    capt += `• Isya : ${i.isya}\n\n──────────────────────\n`
-                reply(capt)
-            }
-            break
-	case 'tafsirsurah': {
-                if (!args[0]) return `Contoh penggunaan:\n${prefix + command} 1 2\n\nmaka hasilnya adalah tafsir surah Al-Fatihah ayat 2`
-                if (!args[1]) return `Contoh penggunaan:\n${prefix + command} 1 2\n\nmaka hasilnya adalah tafsir surah Al-Fatihah ayat 2`
-                let res = await fetchJson(`https://islamic-api-indonesia.herokuapp.com/api/data/quran?surah=${args[0]}&ayat=${args[1]}`)
-                let txt = `「 *Tafsir Surah*  」
-
-*Pendek* : ${res.result.data.tafsir.id.short}
-
-*Panjang* : ${res.result.data.tafsir.id.long}
-
-( Q.S ${res.result.data.surah.name.transliteration.id} : ${res.result.data.number.inSurah} )`
-                reply(txt)
-            }
-            break
-case 'asmaulhusna': {
-            reply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/asmaulhusna?apikey=${global.lolhuman}`)
-				.then(({ data }) => {
-					var text = `No : ${data.result.index}\n`
-					text += `Latin: ${data.result.latin}\n`
-					text += `Arab : ${data.result.ar}\n`
-					text += `Indonesia : ${data.result.id}\n`
-					text += `English : ${data.result.en}`
-					reply(text)
-				})
-}
-				.catch(console.error)
-			break
-			case 'alquranaudio': {
-                if (args.length == 0) return reply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10`)
-                reply(mess.wait)
-                agung.sendMessage(m.chat, { audio: { url: `https://api.lolhuman.xyz/api/quran/audio/${args[0]}?apikey=${global.lolhuman}`}, mimetype: 'audio/mp4', ptt: true }, { quoted: m })
-            }
-            break
-            case 'alquran': {
-			if (args.length < 1) return reply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10 or ${prefix + command} 18/1-10`)
-			reply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/quran/${args[0]}?apikey=${global.lolhuman}`)
-				.then(({ data }) => {
-					var ayat = data.result.ayat
-					var text = `QS. ${data.result.surah} : 1-${ayat.length}\n\n`
-					for (var x of ayat) {
-						text += `${x.arab}\n${x.ayat}. ${x.latin}\n${x.indonesia}\n\n`
-					}
-					text = text.replace(/<u>/g, '_').replace(/<\/u>/g, '_')
-					text = text.replace(/<strong>/g, '*').replace(/<\/strong>/g, '*')
-					reply(text)
-				})
-	    }
-				.catch(console.error)
-            break
-case 'kisahnabi': {
-			if (args.length == 0) return reply(`Example: ${prefix + command} Muhammad`)
-			reply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/kisahnabi/${full_args}?apikey=${global.lolhuman}`)
-				.then(({ data }) => {
-					var text = `Name : ${data.result.name}\n`
-					text += `Lahir : ${data.result.thn_kelahiran}\n`
-					text += `Umur : ${data.result.age}\n`
-					text += `Tempat : ${data.result.place}\n`
-					text += `Story : \n${data.result.story}`
-					reply(text)
-				})
-}
-				.catch(console.error)
-			break
-            case 'listsurah': {
-            reply(mess.wait)
-			axios.get(`https://api.lolhuman.xyz/api/quran?apikey=${global.lolhuman}`)
-				.then(({ data }) => {
-					var text = 'List Surah:\n'
-					for (var x in data.result) {
-						text += `${x}. ${data.result[x]}\n`
-					}
-					reply(text)
-				})
-}
-				.catch(console.error)
-			break
 	case"sticker":case"s":if(!quoted)return reply(`Kirim/Reply Gambar/Video/Gifs Dengan Caption ${prefix + command}
 Durasi Video 1-9 Detik`);if(/image/.test(mime))await fs.unlinkSync(await agung.sendImageAsSticker(m.chat,await quoted.download(),m,{packname:global.packname,author:global.footer}));else if(/video/.test(mime)){if((quoted.msg||quoted).seconds>11)return reply("Kirim/Reply Gambar/Video/Gifs Dengan Caption ${prefix + command}\nDurasi Video 1-9 Detik");await fs.unlinkSync(await agung.sendVideoAsSticker(m.chat,await quoted.download(),m,{packname:global.packname,author:global.footer}))}else reply(`Kirim/Reply Gambar/Video/Gifs Dengan Caption ${prefix + command}
 Durasi Video 1-9 Detik`)
