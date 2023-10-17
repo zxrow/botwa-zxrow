@@ -415,14 +415,7 @@ let menu = `
 *│ ◦ .postig*
 *│ ◦ .tourl*
 *│ ◦ .speak*
-*│ ◦ .smeme*
-*—  I S L A M I C  M E N U ッ*
-*│ ◦ .jadwalsholat*
-*│ ◦ .tafsirsurah*
-*│ ◦ .alquranaudio*
-*│ ◦ .alquran*
-*│ ◦ .kisahnabi*
-*│ ◦ .listsurah*`
+*│ ◦ .smeme*`
 m.reply(`HI ${pushname} hallo ngaf😁👋\n\n` + menu + `\n\n${runtime(process.uptime())}`)
 }
 break
