@@ -377,7 +377,7 @@ switch (command) {
 case 'menu': {
 let menu = `
 *┌ Bot Name* : *ZXBOT*
-*│ Version* : *1*
+*│ Version* : *2*
 *│ Language* : *NodeJs*
 *└ Baileys* : *@adiwashing/baileys*
 
@@ -387,6 +387,7 @@ let menu = `
 *│
 *—  D O W N L O A D M E N U ッ*  
 *│ ◦ .play*
+*│ ◦ .play2*
 *│ ◦ .ytmp3 [link]*
 *│ ◦ .ytmp4 [link]*
 *│ ◦ .spotify*
@@ -415,7 +416,19 @@ let menu = `
 *│ ◦ .postig*
 *│ ◦ .tourl*
 *│ ◦ .speak*
-*│ ◦ .smeme*`
+*│ ◦ .smeme*
+*—  G A M E  M E N U ッ*
+*│ ◦ .ttc*
+*│ ◦ .delttc*
+*│ ◦ .suitpvp*
+*—  I S L A M I C M E N U ッ*
+*│ ◦ .kisahnabi*
+*│ ◦ .asmaulhusna*
+*│ ◦ .listsurah*
+*│ ◦ .randomquran*
+*│ ◦ .randomquran2*
+*—  G R O U P  M E N U ッ*
+*│ ◦ .pushkontakv2`
 m.reply(`HI ${pushname} hallo ngaf😁👋\n\n` + menu + `\n\n${runtime(process.uptime())}`)
 }
 break
@@ -434,6 +447,39 @@ agung.sendMessage(m.chat, { video: { url: anu.media}, caption: `Done Sayang >///
 }catch (error) {
 reply(`Sorry this video can't be download\n\nPlease try typing .ig3 *url*`);
 }
+}
+break
+case 'play2': case 'ytplay2':{
+if (!text) return reply(`Example : ${prefix + command} Lagu sad`)
+let search = await yts(`${text}`)
+let caption = `*YOUTUBE PLAY*
+
+あ ID : ${search.all[0].videoId}
+あ Title : ${search.all[0].title}
+あ Views : ${search.all[0].views}
+あ Duration : ${search.all[0].timestamp}
+あ Channel : ${search.all[0].author.name}
+あ Upload : ${search.all[0].ago}
+あ URL Video : ${search.videos[0].url}
+あ Description : ${search.videos[0].description}
+
+_Please wait, the audio file is being sent..._`
+let todd = await getBuffer(search.all[0].image)
+agung.sendMessage(m.chat, {image: todd, caption: caption}, {quoted:m})
+let ply = search.videos[0].url
+const ytdl = require('ytdl-core')
+let mp3file = `./${m.chat}.mp3`
+  let nana = ytdl(ply, { filter: 'audioonly' })
+  .pipe(fs.createWriteStream(mp3file))
+  .on('finish', async () => {
+agung.sendMessage(m.chat, {audio: fs.readFileSync(mp3file), mimetype:'audio/mpeg' }, {quoted: m})
+   })
+}
+break
+case 'ytmp4': case 'mp4':{
+if (!text) return m.reply('Masukan Link Nya!!!')
+reply(mess.wait)
+downloadMp4(text)
 }
 break
 case 'play': case 'ytplay': {
@@ -700,6 +746,236 @@ break
 	case"sticker":case"s":if(!quoted)return reply(`Kirim/Reply Gambar/Video/Gifs Dengan Caption ${prefix + command}
 Durasi Video 1-9 Detik`);if(/image/.test(mime))await fs.unlinkSync(await agung.sendImageAsSticker(m.chat,await quoted.download(),m,{packname:global.packname,author:global.footer}));else if(/video/.test(mime)){if((quoted.msg||quoted).seconds>11)return reply("Kirim/Reply Gambar/Video/Gifs Dengan Caption ${prefix + command}\nDurasi Video 1-9 Detik");await fs.unlinkSync(await agung.sendVideoAsSticker(m.chat,await quoted.download(),m,{packname:global.packname,author:global.footer}))}else reply(`Kirim/Reply Gambar/Video/Gifs Dengan Caption ${prefix + command}
 Durasi Video 1-9 Detik`)
+break
+case 'ttc': case 'ttt': case 'tictactoe': {
+    let TicTacToe = require("../lib/tictactoe")
+    this.game = this.game ? this.game : {}
+    if (Object.values(this.game).find(room => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender))) throw 'Kamu masih didalam game'
+    let room = Object.values(this.game).find(room => room.state === 'WAITING' && (text ? room.name === text : true))
+    if (room) {
+    m.reply('Partner ditemukan!')
+    room.o = from
+    room.game.playerO = m.sender
+    room.state = 'PLAYING'
+    let arr = room.game.render().map(v => {
+    return {
+    X: '❌',
+    O: '⭕',
+    1: '1️⃣',
+    2: '2️⃣',
+    3: '3️⃣',
+    4: '4️⃣',
+    5: '5️⃣',
+    6: '6️⃣',
+    7: '7️⃣',
+    8: '8️⃣',
+    9: '9️⃣',
+    }[v]
+    })
+    let str = `Room ID: ${room.id}
+
+${arr.slice(0, 3).join('')}
+${arr.slice(3, 6).join('')}
+${arr.slice(6).join('')}
+
+Menunggu @${room.game.currentTurn.split('@')[0]}
+
+Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
+    if (room.x !== room.o) await agung.sendText(room.x, str, m, { mentions: parseMention(str) } )
+    await agung.sendText(room.o, str, m, { mentions: parseMention(str) } )
+    } else {
+    room = {
+    id: 'tictactoe-' + (+new Date),
+    x: from,
+    o: '',
+    game: new TicTacToe(m.sender, 'o'),
+    state: 'WAITING'
+    }
+    if (text) room.name = text
+    m.reply('Menunggu partner' + (text ? ` mengetik command dibawah ini ${prefix}${command} ${text}` : ''))
+    this.game[room.id] = room
+    }
+    }
+    break
+case 'delttc': case 'delttt': {
+    let roomnya = Object.values(this.game).find(room => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender))
+    if (!roomnya) throw `Kamu sedang tidak berada di room tictactoe !`
+    delete this.game[roomnya.id]
+    m.reply(`Berhasil delete session room tictactoe !`)
+    }
+    break
+case 'suitpvp': case 'suit': {
+    this.suit = this.suit ? this.suit : {}
+    let poin = 10
+    let poin_lose = 10
+    let timeout = 60000
+    if (Object.values(this.suit).find(roof => roof.id.startsWith('suit') && [roof.p, roof.p2].includes(m.sender))) m.reply(`Selesaikan suit mu yang sebelumnya`)
+    if (m.mentionedJid[0] === m.sender) return m.reply(`Tidak bisa bermain dengan diri sendiri !`)
+    if (!m.mentionedJid[0]) return m.reply(`_Siapa yang ingin kamu tantang?_\nTag orangnya..\n\nContoh : ${prefix}suit @${owner[1]}`, from, { mentions: [owner[1] + '@s.whatsapp.net'] })
+    if (Object.values(this.suit).find(roof => roof.id.startsWith('suit') && [roof.p, roof.p2].includes(m.mentionedJid[0]))) throw `Orang yang kamu tantang sedang bermain suit bersama orang lain :(`
+    let id = 'suit_' + new Date() * 1
+    let caption = `_*SUIT PvP*_
+
+@${m.sender.split`@`[0]} menantang @${m.mentionedJid[0].split`@`[0]} untuk bermain suit
+
+Silahkan @${m.mentionedJid[0].split`@`[0]} untuk ketik terima/tolak`
+    this.suit[id] = {
+    chat: await agung.sendText(from, caption, m, { mentions: parseMention(caption) }),
+    id: id,
+    p: m.sender,
+    p2: m.mentionedJid[0],
+    status: 'wait',
+    waktu: setTimeout(() => {
+    if (this.suit[id]) agung.sendText(from, `_Waktu suit habis_`, m)
+    delete this.suit[id]
+    }, 60000), poin, poin_lose, timeout
+    }
+    }
+    break
+case "pushkontakv2":
+if (!isCreator) return reply(`Lu Siapa Ngentot?Ini Cuman Khusus agung Sayang ku♥️`)
+if (!text) return reply(`Penggunaan Salah Silahkan Gunakan Command Seperti Ini\n${prefix + command} teks`)
+await reply("_Wᴀɪᴛɪɴɢ ɪɴ ᴘʀᴏɢʀᴇss !!_")
+const halsss = await participants.filter(v => v.id.endsWith('.net')).map(v => v.id)
+for (let men of halsss) {
+agung.sendMessage(men, { text: text })
+await sleep(2000)
+}
+reply("*SUCCESFUL ✅*")
+break
+case 'kisahnabi': {
+if (!text) return reply(`Ketik nama Nabi\nContoh : ${prefix + command} Muhammad`) 
+try{
+let tod = await fetchJson(`https://api.zeeoneofc.my.id/api/islam/kisahnabi?nabi=${text}&apikey=${global.zeeofckey}`)
+const name = tod.result.name
+const ultah = tod.result.birth
+const kematian = tod.result.death_age
+const asal = tod.result.country_from
+const cerita = tod.result.story
+var kisah = `_*Kisah Nabi*_
+Nama Nabi : ${name}
+Hari Kelahiran : ${ultah}
+Wafat Pada Umur : ${kematian}
+Asal : ${asal}
+Kisah Nabi *${name}* :
+${cerita}`
+reply(kisah) 
+}catch (error) {
+reply(`Ketik Nama Nabi Yang Valid`);
+}
+}
+break
+case 'asmaulhusna': {
+try{
+let tod = await fetchJson(`https://api.zeeoneofc.my.id/api/islam/asmaulhusna?apikey=${global.zeeofckey}`)
+const ke = tod.result.index
+const latin = tod.result.latin
+const arab = tod.result.arabic
+const indo = tod.result.translation_id
+const english = tod.result.translation_en
+var asmaul = `_*Random Asmaul Husna*_
+Asmaul Husna Ke : ${ke}
+Teks Arab : ${arab}
+Teks Latin : ${latin}
+Arti Dalam Bahasa Indonesia : ${indo}
+Arti Dalam Bahasa Inggris : ${english}`
+reply(asmaul) 
+}catch (error) {
+reply(`Maaf Terjadi Kesalahan`);
+}
+}
+break
+case 'listsurah': case 'listsurat': {
+try{
+let tod = await fetchJson(`https://api.zeeoneofc.my.id/api/islam/listsurah?apikey=${global.zeeofckey}`)
+const list = tod.result
+var surah = `_*List Surah*_
+${list}`
+reply(surah) 
+}catch (error) {
+reply(`Maaf Terjadi Kesalahan`);
+}
+}
+break
+case 'randomquran': {
+try{
+let tod = await fetchJson(`https://api.zeeoneofc.my.id/api/islam/randomquran?apikey=${global.zeeofckey}`)
+const audio = tod.result.resources.ayah.audio.primary
+const nama = tod.result.resources.nameOfSurah.long
+const latin = tod.result.resources.nameOfSurah.transliteration.id
+const nomer = tod.result.resources.numberOfSurah
+const juz = tod.result.resources.ayah.meta.juz
+const ayat = tod.result.resources.totalAyah
+const ayatke = tod.result.resources.numberOfAyah
+const teks = tod.result.resources.ayah.text.arab
+const trans = tod.result.resources.ayah.text.transliteration.en
+const artiid = tod.result.resources.ayah.translation.id
+const artien = tod.result.resources.ayah.translation.en
+const tafsir = tod.result.resources.ayah.tafsir.id.long
+var quran = `_*Random Quran*_
+Quran : ${nama}
+Teks Latin : ${latin}
+Surat Ke : ${nomer}
+Juz : ${juz}
+Total Ayat : ${ayat}
+Ayat Ke : ${ayatke}
+Isi Ayat : ${teks}
+Latin : ${trans}
+Arti Dalam Bahasa Indonesia : ${artiid}
+Arti Dalam Bahasa Inggris : ${artien}
+Tafsir Surah : ${tafsir}`
+await reply(quran) 
+await reply('Tunggu Sebentar Audio Sedang Dikirim') 
+await agung.sendMessage(m.chat, {audio : {url : audio}, mimetype:'audio/mpeg'}, {quoted:m})}catch (error) {
+reply(`Maaf Terjadi Kesalahan`);
+}
+}
+break
+case 'randomquran2': {
+if (!text) return reply(`Masukkan Juznya\nContoh : ${prefix + command} 1`) 
+try{
+let tod = await fetchJson(`https://api.zeeoneofc.my.id/api/islam/randomquran2?juz=${text}&apikey=${global.zeeofckey}`)
+const audio = tod.result.resources.ayah.audio.primary
+const nama = tod.result.resources.nameOfSurah.long
+const latin = tod.result.resources.nameOfSurah.transliteration.id
+const nomer = tod.result.resources.numberOfSurah
+const juz = tod.result.resources.ayah.meta.juz
+const ayat = tod.result.resources.totalAyah
+const ayatke = tod.result.resources.numberOfAyah
+const teks = tod.result.resources.ayah.text.arab
+const trans = tod.result.resources.ayah.text.transliteration.en
+const artiid = tod.result.resources.ayah.translation.id
+const artien = tod.result.resources.ayah.translation.en
+const tafsir = tod.result.resources.ayah.tafsir.id.long
+var quran = `_*Random Quran*_
+Quran : ${nama}
+Teks Latin : ${latin}
+Surat Ke : ${nomer}
+Juz : ${juz}
+Total Ayat : ${ayat}
+Ayat Ke : ${ayatke}
+Isi Ayat : ${teks}
+Latin : ${trans}
+Arti Dalam Bahasa Indonesia : ${artiid}
+Arti Dalam Bahasa Inggris : ${artien}
+Tafsir Surah : ${tafsir}`
+await reply(quran) 
+await reply('Tunggu Sebentar Audio Sedang Dikirim') 
+await agung.sendMessage(m.chat, {audio : {url : audio}, mimetype:'audio/mpeg'}, {quoted:m})}catch (error) {
+reply(`Maaf Terjadi Kesalahan`);
+}
+}
+break
+case 'quranaudio': {
+if (!text) return reply(`Masukkan Suratnya\nContoh : ${prefix + command} 1\n\nKetik .listsurah Untuk Melihat Daftar Surat`)  
+try{
+let tod = await fetchJson(`https://api.zahwazein.xyz/islami/quran/audio/${text}?apikey=${global.zenzKey}`)
+const audio = tod.result
+await reply('Tunggu Sebentar Audio Sedang Dikirim') 
+await agung.sendMessage(m.chat, {audio : {url : audio}, mimetype:'audio/mpeg'}, {quoted:m})}catch (error) {
+reply(`Maaf Terjadi Kesalahan`);
+}
+}
 break
 //━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
 
