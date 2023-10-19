@@ -428,7 +428,12 @@ let menu = `
 *│ ◦ .randomquran*
 *│ ◦ .randomquran2*
 *—  G R O U P  M E N U ッ*
-*│ ◦ .pushkontakv2`
+*│ ◦ .pushkontakv2*
+*—  S E A R C H  M E N U ッ*
+*│ ◦ .infogempa*
+*│ ◦ .infocuaca*
+*│ ◦ .lirik [query]
+*│ ◦ .pinterest*`
 m.reply(`HI ${pushname} hallo ngaf😁👋\n\n` + menu + `\n\n${runtime(process.uptime())}`)
 }
 break
@@ -975,6 +980,39 @@ await reply('Tunggu Sebentar Audio Sedang Dikirim')
 await agung.sendMessage(m.chat, {audio : {url : audio}, mimetype:'audio/mpeg'}, {quoted:m})}catch (error) {
 reply(`Maaf Terjadi Kesalahan`);
 }
+}
+break
+case 'infogempa': {
+var caption = `Lokasi : ${data.result.lokasi}\n`
+caption += `Waktu : ${data.result.waktu}\n`
+caption += `Potensi : ${data.result.potensi}\n`
+caption += `Magnitude : ${data.result.magnitude}\n`
+caption += `Kedalaman : ${data.result.kedalaman}\n`
+caption += `Koordinat : ${data.result.koordinat}`
+agung.sendMessage(m.chat, { image: { url: data.result.map }, caption })
+}
+break
+case 'lirik': {
+if (args.length == 0) return reply(`Example: ${prefix + command} Melukis Senja`)
+reply(mess.wait)
+var { data } = await axios.get(`https://api.zerowebsite.eu.org/api/search/lirik?q=${encodeURIComponent(full_args)}&apikey=${global.zerokey}`)
+agung.sendMessage(m.chat, { image: { url: data.data.thumb }, caption: data.data.lirik },{quoted:m})
+}
+break
+case 'infocuaca': {
+if (args.length == 0) return reply(`Example: ${prefix + command} Yogyakarta`)
+reply(mess.wait)
+var { data } = await axios.get(`https://api.lolhuman.xyz/api/cuaca/${args[0]}?apikey=${global.lolhuman}`)
+var titttttttttt = `Tempat : ${data.result.tempat}\n`
+titttttttttt += `Cuaca : ${data.result.cuaca}\n`
+titttttttttt += `Angin : ${data.result.angin}\n`
+titttttttttt += `Description : ${data.result.description}\n`
+titttttttttt += `Kelembapan : ${data.result.kelembapan}\n`
+titttttttttt += `Suhu : ${data.result.suhu}\n`
+titttttttttt += `Udara : ${data.result.udara}\n`
+titttttttttt += `Permukaan laut : ${data.result.permukaan_laut}\n`
+agung.sendMessage(m.chat, { location: { degreesLatitude: data.result.latitude, degreesLongitude: data.result.longitude } })
+reply(titttttttttt)
 }
 break
 //━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
