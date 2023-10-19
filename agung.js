@@ -392,7 +392,7 @@ let menu = `
 *│ ◦ .ytmp4 [link]*
 *│ ◦ .spotify*
 *│ ◦ .spotifydl [link]*
-*│ ◦ .tiktoksearch [query*
+*│ ◦ .tiktoksearch [query]*
 *│ ◦ .tiktokmp4*
 *│ ◦ .tiktokmp3 [link]*
 *│ ◦ .fbdl [link]*
