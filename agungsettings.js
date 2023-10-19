@@ -23,6 +23,7 @@ global.github = 'https://github.com/zxrow'
 global.lolhuman = '-'
 global.zeeofckey = '-'
 global.xznkey = '-'
+global.zerokey = '-'
 global.nomorowner = 'https://wa.me/-'
 global.region = 'I`m From Indonesia'
 global.prefa = ['','!','.','#','-','•']
