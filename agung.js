@@ -433,7 +433,8 @@ let menu = `
 *│ ◦ .infogempa*
 *│ ◦ .infocuaca*
 *│ ◦ .lirik [query]
-*│ ◦ .pinterest*`
+*│ ◦ .stalktiktok [query]
+*│ ◦ .pinterest [query]*`
 m.reply(`HI ${pushname} hallo ngaf😁👋\n\n` + menu + `\n\n${runtime(process.uptime())}`)
 }
 break
@@ -1013,6 +1014,21 @@ titttttttttt += `Udara : ${data.result.udara}\n`
 titttttttttt += `Permukaan laut : ${data.result.permukaan_laut}\n`
 agung.sendMessage(m.chat, { location: { degreesLatitude: data.result.latitude, degreesLongitude: data.result.longitude } })
 reply(titttttttttt)
+}
+break
+case 'stalktiktok': {
+await loading()
+if (args.length == 0) return reply(`Example: ${prefix + command} bulansutena`)
+axios.get(`https://api.lolhuman.xyz/api/stalktiktok/${args[0]}?apikey=${global.lolhuman}`).then(({ data }) => {
+var caption = `Username : ${data.result.username}\n`
+caption += `Nickname : ${data.result.nickname}\n`
+caption += `Followers : ${data.result.followers}\n`
+caption += `Followings : ${data.result.followings}\n`
+caption += `Likes : ${data.result.likes}\n`
+caption += `Video : ${data.result.video}\n`
+caption += `Bio : ${data.result.bio}\n`
+agung.sendMessage(from, { image: { url: data.result.user_picture }, caption })
+})
 }
 break
 //━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
