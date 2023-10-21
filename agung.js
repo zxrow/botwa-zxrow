@@ -565,7 +565,7 @@ agung.sendMessage(m.chat, {audio : {url : aud}, mimetype:'audio/mpeg'}, {quoted:
 }
 break
 case 'tiktoksearch': case 'tiktoks': case 'ttsearch':{
-if (!text) return reply(`Gunakan dengan cara ${prefix + command} *query*\n\n_Contoh_\n\n${prefix+command} jj epep`)
+if (!text) return reply(`Gunakan dengan cara ${prefix + command} *query*\n\n_Contoh_\n\n${prefix + command} jj epep`)
 reply(mess.wait)
 try{
 let anu = await fetchJson(`https://xzn.wtf/api/ttsearch?search=${text}&apikey={global.xznkey}`)
@@ -578,9 +578,9 @@ reply(`Sorry this video can't be download\n\nRequest failed with status code *40
 }
 break
 case 'speak':{
-if (!text) return reply(`Gunakan dengan cara ${prefix+command} text\n\nContoh : ${prefix+command} Halo semuanya`)
+if (!text) return reply(`Gunakan dengan cara ${prefix+command} text\n\nContoh : ${prefix + command} Halo semuanya`)
 await agung.sendPresenceUpdate('recording', m.chat);
-var suara = await fetchJson(`https://xzn.wtf/api/tts-anime?text=${text}&lang=mix&voice=paimon&speed=0.65&symbol=y&apikey=arel25`)
+var suara = await fetchJson(`https://xzn.wtf/api/tts-anime?text=${text}&lang=mix&voice=paimon&speed=0.65&symbol=y&apikey={global.xznkey}`)
 agung.sendMessage(m.chat, {audio: {url: suara.data.url}, mimetype: 'audio/mpeg', ptt: true}, {quoted:m})
 }
 break
@@ -975,7 +975,7 @@ break
 case 'quranaudio': {
 if (!text) return reply(`Masukkan Suratnya\nContoh : ${prefix + command} 1\n\nKetik .listsurah Untuk Melihat Daftar Surat`)  
 try{
-let tod = await fetchJson(`https://api.zahwazein.xyz/islami/quran/audio/${text}?apikey=${global.zenzKey}`)
+let tod = await fetchJson(`https://api.zahwazein.xyz/islami/quran/audio/${text}?apikey=${global.zenzkey}`)
 const audio = tod.result
 await reply('Tunggu Sebentar Audio Sedang Dikirim') 
 await agung.sendMessage(m.chat, {audio : {url : audio}, mimetype:'audio/mpeg'}, {quoted:m})}catch (error) {
