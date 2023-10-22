@@ -432,6 +432,8 @@ let menu = `
 *—  S E A R C H  M E N U ッ*
 *│ ◦ .infogempa*
 *│ ◦ .infocuaca*
+*│ ◦ .ai*
+*│ ◦ .aimage*
 *│ ◦ .lirik [query]
 *│ ◦ .stalktiktok [query]
 *│ ◦ .pinterest [query]*`
@@ -1031,6 +1033,63 @@ agung.sendMessage(from, { image: { url: data.result.user_picture }, caption })
 })
 }
 break
+case 'ai': case 'openai':
+try {
+if (global.keyopenai === '') return reply("Api key limi exceeded");
+if (!q) return reply(`Chat with AI.\n\nExample:\n${prefix + command} What is coding`)
+const { Configuration, OpenAIApi } = require('openai')
+const configuration = new Configuration({
+apiKey: global.keyopenai,
+});
+const openai = new OpenAIApi(configuration);
+const response = await openai.createCompletion({
+model: "text-davinci-003",
+prompt: q,
+temperature: 0.3,
+max_tokens: 2000,
+top_p: 1.0,
+frequency_penalty: 0.0,
+presence_penalty: 0.0,
+});
+reply(`${response.data.choices[0].text}`);
+} catch (error) {
+if (error.response) {
+console.log(error.response.status);
+console.log(error.response.data);
+console.log(`${error.response.status}\n\n${error.response.data}`);
+} else {
+console.log(error);
+reply("Sorry, there seems to be an error :"+ error.message);
+}
+}
+break
+case "img": case "aimage": case "image": case "images":
+          try {
+            if (global.keyopenai === '') return reply("Apikey belum diisi\n\nSilahkan isi terlebih dahulu apikeynya\n\nApikeynya bisa dibuat di website: https://beta.openai.com/account/api-keys");
+            if (!text) return reply(`Membuat gambar dari AI.\n\nContoh:\n${prefix}${command} Wooden house on snow mountain`);
+            const configuration = new Configuration({
+              apiKey: global.keyopenai,
+            });
+            const openai = new OpenAIApi(configuration);
+            const response = await openai.createImage({
+              prompt: text,
+              n: 1,
+              size: "512x512",
+            });
+            //console.log(response.data.data[0].url)
+            agung.sendImage(from, response.data.data[0].url, text, m);
+            } catch (error) {
+          if (error.response) {
+            console.log(error.response.status);
+            console.log(error.response.data);
+            console.log(`${error.response.status}\n\n${error.response.data}`);
+          } else {
+            console.log(error);
+            m.reply("Maaf, sepertinya ada yang error :"+ error.message);
+          }
+        }
+          break
+
 //━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
 
 default:
