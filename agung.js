@@ -435,6 +435,7 @@ let menu = `
 *│ ◦ .infocuaca*
 *│ ◦ .ai*
 *│ ◦ .aimage*
+*│ ◦ .simi [query]*
 *│ ◦ .lirik [query]
 *│ ◦ .stalktiktok [query]
 *│ ◦ .pinterest [query]*`
@@ -1062,6 +1063,12 @@ console.log(error);
 reply("Sorry, there seems to be an error :"+ error.message);
 }
 }
+break
+case 'bot': case 'simi': {
+if (!q) reply('Iya Kak?')
+let simi = await fetchJson(`https://api.zahwazein.xyz/entertainment/simisimi?text=${q}&apikey=${global.zenzkey}`)
+const simi2 = simi.result.message
+agung.sendMessage(m.chat, {text: simi2}, {quoted: m})
 break
 case "img": case "aimage": case "image": case "images":
           try {
