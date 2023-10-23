@@ -26,6 +26,7 @@ const { Primbon } = require("scrape-primbon")
 const { TelegraPH } = require("./lib/TelegraPH")
 const agung2 = require('./scrap/mediafire')
 const { remini } = require('./lib/remini')
+const { Configuration, OpenAIApi } = require("openai");
 const primbon = new Primbon()
 const { smsg, formatp, tanggal, formatDate, getTime, isUrl, sleep, clockString, runtime, fetchJson, getBuffer, jsonformat, parseMention, getRandom } = require('./lib/functions')
 const addusrp = JSON.parse(fs.readFileSync('./database/user.json'))
@@ -1035,9 +1036,8 @@ agung.sendMessage(from, { image: { url: data.result.user_picture }, caption })
 break
 case 'ai': case 'openai':
 try {
-if (global.keyopenai === '') return reply("Api key limi exceeded");
+if (global.keyopenai === '') return reply("Api key limit");
 if (!q) return reply(`Chat with AI.\n\nExample:\n${prefix + command} What is coding`)
-const { Configuration, OpenAIApi } = require('openai')
 const configuration = new Configuration({
 apiKey: global.keyopenai,
 });
