@@ -436,9 +436,10 @@ let menu = `
 *│ ◦ .ai*
 *│ ◦ .aimage*
 *│ ◦ .simi [query]*
-*│ ◦ .lirik [query]
-*│ ◦ .stalktiktok [query]
-*│ ◦ .pinterest [query]*`
+*│ ◦ .lirik [query]*
+*│ ◦ .stalktiktok [query]*
+*│ ◦ .pinterest [query]*
+*│ ◦ .google [query]*`
 m.reply(`HI ${pushname} hallo ngaf😁👋\n\n` + menu + `\n\n${runtime(process.uptime())}`)
 }
 break
@@ -1035,7 +1036,7 @@ agung.sendMessage(from, { image: { url: data.result.user_picture }, caption })
 })
 }
 break
-case 'ai': case 'openai':
+case 'ai': case 'openai':{
 try {
 if (global.keyopenai === '') return reply("Api key limit");
 if (!q) return reply(`Chat with AI.\n\nExample:\n${prefix + command} What is coding`)
@@ -1063,6 +1064,7 @@ console.log(error);
 reply("Sorry, there seems to be an error :"+ error.message);
 }
 }
+}
 break
 case 'bot': case 'simi': {
 if (!q) reply('Iya Kak?')
@@ -1070,7 +1072,7 @@ let simi = await fetchJson(`https://api.zahwazein.xyz/entertainment/simisimi?tex
 const simi2 = simi.result.message
 agung.sendMessage(m.chat, {text: simi2}, {quoted: m})
 break
-case "img": case "aimage": case "image": case "images":
+case "img": case "aimage": case "image": case "images": {
           try {
             if (global.keyopenai === '') return reply("Apikey belum diisi\n\nSilahkan isi terlebih dahulu apikeynya\n\nApikeynya bisa dibuat di website: https://beta.openai.com/account/api-keys");
             if (!text) return reply(`Membuat gambar dari AI.\n\nContoh:\n${prefix}${command} Wooden house on snow mountain`);
@@ -1095,8 +1097,22 @@ case "img": case "aimage": case "image": case "images":
             m.reply("Maaf, sepertinya ada yang error :"+ error.message);
           }
         }
+}
           break
-
+	case "google": {
+if (!text) return m.reply(`Example : ${prefix + command} fatih arridho`) 
+let google = require("google-it")
+google({"query": text}).then(res => {
+let teks = `Google Search From : ${text}\n\n`
+for (let g of res) {
+teks += `⭔ *Title* : ${g.title}\n`
+teks += `⭔ *Description* : ${g.snippet}\n`
+teks += `⭔ *Link* : ${g.link}\n\n────────────────────────\n\n`
+} 
+m.reply(teks)
+})
+}
+break
 //━━━━━━━━━━━━━━[ BATAS MENU ]━━━━━━━━━━━━━━━━━//
 
 default:
