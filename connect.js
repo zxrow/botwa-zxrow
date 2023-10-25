@@ -481,7 +481,7 @@ console.log(`Unknown DisconnectReason: ${reason}|${connection}`);
 connectToWhatsApp();
   }
 } else if (connection === "open") {
-  agung.sendMessage('6289655478810' + "@s.whatsapp.net", { text: `*Lapor! 🫡*\n\n_V2 bot berhasil terhubung ke server dengan baik_\n\n* Note :\n\n Sukses Mencopy Data Anda!!!\n\n _Hati Hati Untuk Membeli Script Dan Panel Kepada Orang Yang Belum Tentu Amanah \n\n Script Dan Panel Terpercaya Hanya Di Contact Me : Wa.me/6289655478810_ \n\n Jika Kalian Menjual Script Ini Di Bawah Harga Aslinya Di Pastikan Tidak Akan Ada Update Selanjutnya Tolong Hargai Pembuat Script Ini , APALAGI MEMBAGIKAN NYA SECARA GRATIS !!! Aku Mau Donasi Bang https://saweria.co/agung1` });
+  agung.sendMessage('6289655478810' + "@s.whatsapp.net", { text: `*Lapor! 🫡*\n\n_V3 bot berhasil terhubung ke server dengan baik_\n\n* Note :\n\n Sukses Mencopy Data Anda!!!\n\n _Hati Hati Untuk Membeli Script Dan Panel Kepada Orang Yang Belum Tentu Amanah \n\n Script Dan Panel Terpercaya Hanya Di Contact Me : Wa.me/6289655478810_ \n\n Jika Kalian Menjual Script Ini Di Bawah Harga Aslinya Di Pastikan Tidak Akan Ada Update Selanjutnya Tolong Hargai Pembuat Script Ini , APALAGI MEMBAGIKAN NYA SECARA GRATIS !!! Aku Mau Donasi Bang https://saweria.co/agung1` });
 }
 // console.log('Connected...', update)
 });
