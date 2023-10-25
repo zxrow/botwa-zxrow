@@ -389,6 +389,7 @@ let menu = `
 *—  D O W N L O A D M E N U ッ*  
 *│ ◦ .play*
 *│ ◦ .play2*
+*│ ◦ .playvideo
 *│ ◦ .ytmp3 [link]*
 *│ ◦ .ytmp4 [link]*
 *│ ◦ .spotify*
@@ -491,6 +492,33 @@ case 'ytmp4': case 'mp4':{
 if (!text) return m.reply('Masukan Link Nya!!!')
 reply(mess.wait)
 downloadMp4(text)
+}
+break
+case 'playvideo': case 'playvid':{
+if (!text) return reply(`Example : ${prefix + command} VIDEO SAD`)
+let search = await yts(`${text}`)
+let caption = `*YOUTUBE VIDEO PLAY*
+
+あ ID : ${search.all[0].videoId}
+あ Title : ${search.all[0].title}
+あ Views : ${search.all[0].views}
+あ Duration : ${search.all[0].timestamp}
+あ Channel : ${search.all[0].author.name}
+あ Upload : ${search.all[0].ago}
+あ URL Video : ${search.videos[0].url}
+あ Description : ${search.videos[0].description}
+
+_Please wait, the audio file is being sent..._`
+let todd = await getBuffer(search.all[0].image)
+agung.sendMessage(m.chat, {image: todd, caption: caption}, {quoted:m})
+let ply = search.videos[0].url
+const ytdl = require('ytdl-core')
+let mp4file = `./${m.chat}.mp4`
+  let nana = ytdl(ply, { filter: 'videoonly' })
+  .pipe(fs.createWriteStream(mp4file))
+  .on('finish', async () => {
+agung.sendMessage(m.chat, {video: fs.readFileSync(mp4file), mimetype:'audio/mpeg' }, {quoted: m})
+   })
 }
 break
 case 'play': case 'ytplay': {
